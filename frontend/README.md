@@ -13,6 +13,7 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 2. Start the app
 
    ```bash
+   cd frontend
    npx expo start
    ```
 
@@ -28,3 +29,4 @@ You can start developing by editing the files inside the **app** directory. This
 - Các màn hình (Screens) được đặt trong thư mục `app/`. Khi tạo một file `.tsx` hoặc `.js` mới ở đây, nó sẽ tự động trở thành một màn hình có thể truy cập được.
 - Các thành phần tái sử dụng (như nút bấm, thẻ hiển thị món ăn) phải được tạo trong thư mục `components/`.
 - Cấu hình địa chỉ IP của Backend Server được đặt tại file `constants/api.js`.
+- Mình có thể chạy hiện app ra trên điện thoại bằng cách tải Expo Go trên CH Play/App store và quét mã QR hiện trong terminal sau lệnh start the app ở trên.
