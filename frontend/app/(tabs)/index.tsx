@@ -16,18 +16,16 @@ export default function HomeScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
 
-  // Ban đầu danh sách tủ lạnh RỖNG hoàn toàn (Không có sẵn bắp bò hay cà rốt)
+  // Danh sách thực phẩm trong tủ lạnh (Ban đầu rỗng)
   const [fridgeItems, setFridgeItems] = useState<any[]>([]);
 
-  // Lắng nghe dữ liệu MỚI ĐƯỢC GỬI SANG từ màn hình Cam AI sau khi quét
+  // Lắng nghe dữ liệu MỚI ĐƯỢC GỬI SANG từ Cam AI sau khi quét
   React.useEffect(() => {
     if (params.scannedItemData) {
       try {
         const newItem = JSON.parse(params.scannedItemData as string);
         
-        // Thêm món vừa quét từ Cam AI vào danh sách tủ lạnh
         setFridgeItems(prevItems => {
-          // Tránh bị lặp lại món vừa thêm
           const isExist = prevItems.some(item => item.id === newItem.id);
           if (isExist) return prevItems;
           return [newItem, ...prevItems];
@@ -38,7 +36,7 @@ export default function HomeScreen() {
     }
   }, [params.scannedItemData]);
 
-  // Quản lý trạng thái Modal
+  // Management State
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState<any>(null);
@@ -54,14 +52,13 @@ export default function HomeScreen() {
     setConfirmModalVisible(true);
   };
 
-  // Xác nhận Nấu & Tự dọn tủ
   const handleConfirmCook = () => {
     if (!selectedItem) return;
 
     const itemName = selectedItem.name;
     const itemId = selectedItem.id;
 
-    // Xóa món đã nấu khỏi danh sách tủ lạnh
+    // Xóa món đã nấu
     setFridgeItems(prev => prev.filter(i => i.id !== itemId));
 
     setConfirmModalVisible(false);
@@ -78,7 +75,6 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Text style={styles.header}>Tủ Lạnh Nhà Bạn 🥩🥦</Text>
 
-      {/* HIỂN THỊ THÔNG BÁO NẾU TỦ LẠNH ĐANG TRỐNG */}
       {fridgeItems.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyIcon}>🧊</Text>
@@ -88,7 +84,6 @@ export default function HomeScreen() {
           </Text>
         </View>
       ) : (
-        /* HIỂN THỊ DANH SÁCH MÓN ĐÃ QUÉT TỪ CAM AI */
         <FlatList
           data={fridgeItems}
           keyExtractor={(item) => item.id}
@@ -111,14 +106,14 @@ export default function HomeScreen() {
         />
       )}
 
-      {/* NÚT CHUYỂN SANG MÀN HÌNH QUÉT CAM AI */}
+      {/* Đường dẫn mở tab scan-result */}
       <Button
         title="📸 QUÉT THỰC PHẨM BẰNG CAM AI"
         color="#2e7d32"
-        onPress={() => router.push('/scan-result')}
+        onPress={() => router.push('/(tabs)/scan-result')}
       />
 
-      {/* MODAL CHI TIẾT DỮ LIỆU TỪ CAM AI (CHỈ MỞ KHU CÓ MÓN ĐƯỢC CHỌN) */}
+      {/* POPUP CHI TIẾT MÓN ÁN */}
       {selectedItem && (
         <Modal visible={modalVisible} animationType="slide" transparent={true}>
           <View style={styles.modalOverlay}>
@@ -144,11 +139,10 @@ export default function HomeScreen() {
                   <View style={styles.divider} />
 
                   <Text style={styles.infoText}>📅 Ngày cất vào tủ: {selectedItem.purchaseDate}</Text>
-                  <Text style={styles.infoText}>⏳ Hạn dùng dự kiến (Big Data): {selectedItem.expDate}</Text>
+                  <Text style={styles.infoText}>⏳ Hạn dùng dự kiến: {selectedItem.expDate}</Text>
                   <Text style={styles.infoText}>🌡️ Nhiệt độ bảo quản: {selectedItem.temp}</Text>
                 </View>
 
-                {/* DANH SÁCH GỢI Ý MÓN ĂN NHẬN TỪ CAM AI */}
                 <Text style={styles.sectionHeader}>
                   💡 Gợi Ý Món Ăn Chế Biến ({selectedItem.suggestedRecipes?.length || 0} món)
                 </Text>
@@ -178,7 +172,7 @@ export default function HomeScreen() {
         </Modal>
       )}
 
-      {/* MODAL HỎI XÓA NGUYÊN LIỆU PHỤ TỰ ĐỘNG */}
+      {/* POPUP HỎI XÓA NGUYÊN LIỆU PHỤ TỰ ĐỘNG */}
       <Modal visible={confirmModalVisible} transparent animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: '#fff' }]}>
@@ -211,7 +205,6 @@ const styles = StyleSheet.create({
   statusFresh: { color: '#2e7d32', fontWeight: 'bold' },
   statusWarning: { color: '#e65100', fontWeight: 'bold' },
   subText: { color: '#666', marginTop: 4, fontSize: 13 },
-  
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 16 },
   modalContent: { backgroundColor: '#fff', padding: 18, borderRadius: 12 },
   modalTitle: { fontSize: 20, fontWeight: 'bold', color: '#1b5e20', marginBottom: 10 },
