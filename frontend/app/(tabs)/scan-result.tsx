@@ -18,7 +18,6 @@ export default function ScanResultScreen() {
   const [loading, setLoading] = useState(false);
   const [imageUri, setImageUri] = useState<string | null>(null);
 
-  // State lưu thông tin do Cam AI trả về
   const [foodName, setFoodName] = useState('');
   const [qualityStatus, setQualityStatus] = useState('');
   const [freshnessReasons, setFreshnessReasons] = useState<string[]>([]);
@@ -27,14 +26,12 @@ export default function ScanResultScreen() {
   const [recommendedTemp, setRecommendedTemp] = useState('');
   const [suggestedRecipes, setSuggestedRecipes] = useState<any[]>([]);
 
-  // Giả lập quét ảnh (Gửi lên Server Python và nhận JSON về)
+  // Giả lập nhận diện từ Cam AI
   const handleAnalyzeImage = async () => {
     setLoading(true);
     setImageUri('https://via.placeholder.com/300');
 
-    // Giả lập delay 1.5 giây như Cam AI đang phân tích thật
     setTimeout(() => {
-      // Dữ liệu ngẫu nhiên từ Cam AI để bạn test tính linh hoạt
       const aiResponse = {
         food_name: "Thịt bắp bò",
         quality_status: "Tươi",
@@ -65,14 +62,12 @@ export default function ScanResultScreen() {
     }, 1500);
   };
 
-  // Hàm Confirm - Lưu món ăn đã quét vào Tủ Lạnh
   const handleSaveToFridge = (continueScanning: boolean) => {
     if (!foodName) {
       Alert.alert("Chưa có dữ liệu", "Vui lòng bấm nút 'Chụp / Quét Ảnh Cam AI' trước!");
       return;
     }
 
-    // Đóng gói dữ liệu để gửi sang Tủ Lạnh
     const newItem = {
       id: Date.now().toString(),
       name: foodName,
@@ -87,13 +82,12 @@ export default function ScanResultScreen() {
     Alert.alert("Thành công", `Đã thêm [${foodName}] vào tủ lạnh!`);
 
     if (continueScanning) {
-      // Reset để sẵn sàng quét món tiếp theo
       setFoodName('');
       setImageUri(null);
     } else {
-      // Chuyển dữ liệu vừa quét về trang Tủ Lạnh
+      // Quay lại tab chính tủ lạnh
       router.replace({
-        pathname: '/',
+        pathname: '/(tabs)',
         params: { scannedItemData: JSON.stringify(newItem) }
       });
     }
@@ -117,7 +111,6 @@ export default function ScanResultScreen() {
         />
       </View>
 
-      {/* Hiển thị hiệu ứng chờ khi AI đang phân tích */}
       {loading && (
         <View style={styles.loadingBox}>
           <ActivityIndicator size="large" color="#2e7d32" />
@@ -125,7 +118,6 @@ export default function ScanResultScreen() {
         </View>
       )}
 
-      {/* Form hiển thị thông tin AI vừa quét (Cho phép người dùng sửa) */}
       {foodName !== '' && !loading && (
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>Kết quả nhận diện (Người dùng có thể sửa nếu sai):</Text>
@@ -152,7 +144,6 @@ export default function ScanResultScreen() {
           <Text style={styles.label}>Nhiệt độ bảo quản gợi ý:</Text>
           <TextInput style={styles.input} value={recommendedTemp} onChangeText={setRecommendedTemp} />
 
-          {/* 2 Nút Confirm */}
           <View style={styles.btnRow}>
             <View style={{ flex: 0.48 }}>
               <Button title="Lưu & Quét Tiếp" color="#0277bd" onPress={() => handleSaveToFridge(true)} />
