@@ -73,7 +73,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Tủ Lạnh Nhà Bạn 🥩🥦</Text>
+      <Text style={styles.header}>Tủ Lạnh Nhà Bạn </Text>
 
       {fridgeItems.length === 0 ? (
         <View style={styles.emptyContainer}>
@@ -122,7 +122,7 @@ export default function HomeScreen() {
                 <Text style={styles.modalTitle}>{selectedItem.name}</Text>
 
                 <View style={styles.detailCard}>
-                  <Text style={styles.sectionTitle}>📌 Kết Quả Nhận Diện Từ Cam AI</Text>
+                  <Text style={styles.sectionTitle}> Kết Quả Nhận Diện Từ Cam AI</Text>
                   
                   <View style={styles.row}>
                     <Text style={styles.label}>Tình trạng thực phẩm:</Text>
@@ -138,9 +138,9 @@ export default function HomeScreen() {
 
                   <View style={styles.divider} />
 
-                  <Text style={styles.infoText}>📅 Ngày cất vào tủ: {selectedItem.purchaseDate}</Text>
-                  <Text style={styles.infoText}>⏳ Hạn dùng dự kiến: {selectedItem.expDate}</Text>
-                  <Text style={styles.infoText}>🌡️ Nhiệt độ bảo quản: {selectedItem.temp}</Text>
+                  <Text style={styles.infoText}> Ngày cất vào tủ: {selectedItem.purchaseDate}</Text>
+                  <Text style={styles.infoText}> Hạn dùng dự kiến: {selectedItem.expDate}</Text>
+                  <Text style={styles.infoText}> Nhiệt độ bảo quản: {selectedItem.temp}</Text>
                 </View>
 
                 <Text style={styles.sectionHeader}>
